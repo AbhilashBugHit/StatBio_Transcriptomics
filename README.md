@@ -6,8 +6,9 @@ which is basically a simple Ontology enrichment tester. Given a certain table co
 ontology terms in two columns, you can pass the table to this function with a gene list and a background list. It will
 test the proportion of ontology terms in the gene list against the proportion of the same terms in the background list.
 If the proportions are significantly different, as determined by giving the option of the choice of test, Fisher Exact,
-Binomial or Hypergeometric then we know that the gene list is enriched or depleted in genes from a particular ontology category.
-The Binomial and Fisher Exact tests are set to two-sided by default so the determination of enrichment or depletion is done 
-by visual inspection of stacked barplots that are generated for each ontology category that clears the statistical test and
-multiple correction. Barplots where the gene list (red) have more genes than the background for that same cateogry are
-considered to be enriched and if they are lesser in proportion to the green bar are considered depleted.
+Binomial or Hypergeometric then we know that the gene list is enriched in genes from a particular ontology category.
+The Binomial and Fisher Exact tests are set to alternative="greater" by default so they will test for enrichment only. 
+
+Visual inspection of stacked barplots should be done carefully as the axis is not linear and therefore the lengths of the stacked barplots are not geometrically proportional to the relative numbers of cateogry genes in the query list and the background. Refer to the scale on the x-axis to get an idea of the number of genes in the list. The logarithmic scale provides a visually appealing comparison between ontology categories that may vary orders of magnitude in the number of genes that they contain. 
+
+The barplots are generated for each ontology category that clears the statistical test and multiple correction P-value correction under user-specified FDR. 
