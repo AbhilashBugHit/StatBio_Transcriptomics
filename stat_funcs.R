@@ -74,7 +74,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
     in_gp_bg<-relevant_bg_term_counts
     nin_gp_bg<-sapply(relevant_bg_term_counts,function(x){sum(relevant_bg_term_counts)-x})
     contingency_vector_Fisher<-rbind(in_gp_gl,nin_gp_gl,in_gp_bg,nin_gp_bg)
-    Fisher_test_list<-apply(contingency_vector_Fisher,2,function(x){fisher.test(matrix(x,nrow=2))})
+    Fisher_test_list<-apply(contingency_vector_Fisher,2,function(x){fisher.test(matrix(x,nrow=2),alternative = "greater")})
     Fisher_Pvals<-unlist(lapply(Fisher_test_list,function(x){x$p.value}))
     BH_cut_Pval<-BH_correction_Pvalue(Fisher_Pvals,FDR=FDR)
     
@@ -84,7 +84,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
       # in making enrichment plots. So just return the list of the result of statistical
       # tests.
       invisible(Fisher_test_list)
-      stop("No P-values found significant after correction")
+      warning("No P-values found significant after correction")
     }
     
     Cleared_Pval_Categories_index<-which(Fisher_Pvals<=BH_cut_Pval)
@@ -103,7 +103,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
       bp<-barplot(Stat_signif_GO_cat_contingency[c(1,3),],beside = FALSE,col=c(cols[4],cols[7]),log="x",horiz = TRUE,main="GO Enrichment",las=1,cex.names = 0.01)
       text(x=Stat_signif_GO_cat_contingency[c(1),], y=bp, labels=colnames(Stat_signif_GO_cat_contingency), pos=4, xpd=1,cex=0.4,offset=0.1)
       dev.off()
-    }else(stop("No GO category cleared the corrected P-value cut-off"))
+    }else(warning("No GO category cleared the corrected P-value cut-off"))
   }
   
   if(statistic=="Binomial")
@@ -115,7 +115,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
     in_gp_bg<-relevant_bg_term_counts
     total_in_gp_bg<-rep(sum(relevant_bg_term_counts),length(in_gp_bg))
     contingency_vector_Binomial<-rbind(in_gp_gl,total_in_gp_gl,in_gp_bg,total_in_gp_bg)
-    Binomial_test_list<-apply(contingency_vector_Binomial,2,function(x){binom.test(x = x[1],n = x[2],p = x[3]/x[4])})  
+    Binomial_test_list<-apply(contingency_vector_Binomial,2,function(x){binom.test(x = x[1],n = x[2],p = x[3]/x[4],alternative = "greater")})  
     Binomial_Pvals<-unlist(lapply(Binomial_test_list,function(x){x$p.value}))
     BH_cut_Pval<-BH_correction_Pvalue(Binomial_Pvals,FDR=FDR)
     
@@ -125,7 +125,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
       # in making enrichment plots. So just return the list of the result of statistical
       # tests.
       invisible(Binomial_test_list)
-      stop("No P-values found significant after correction")
+      warning("No P-values found significant after correction")
     }
     
     Cleared_Pval_Categories_index<-which(Binomial_Pvals<=BH_cut_Pval)
@@ -144,7 +144,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
       bp<-barplot(Stat_signif_GO_cat_contingency[c(1,3),],beside = FALSE,col=c(cols[4],cols[7]),log="x",horiz = TRUE,main="GO Enrichment",las=1,cex.names = 0.01)
       text(x=Stat_signif_GO_cat_contingency[c(1),], y=bp, labels=colnames(Stat_signif_GO_cat_contingency), pos=4, xpd=1,cex=0.4,offset=0.1)
       dev.off()
-    }else(stop("No GO category cleared the corrected P-value cut-off"))
+    }else(warning("No GO category cleared the corrected P-value cut-off"))
   }
   
   if(statistic=="HyperGeometric")
@@ -166,7 +166,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
       # in making enrichment plots. So just return the list of the result of statistical
       # tests.
       invisible(HyperGeoTest_list)
-      stop("No P-values found significant after correction")
+      warning("No P-values found significant after correction")
     }
     
     Cleared_Pval_Categories_index<-which(HyperGeo_Pvals<=BH_cut_Pval)
@@ -185,7 +185,7 @@ Enrichment_Test_GO<-function(Gene_list,Gene_Background,GO_Annot_table,geneid_col
       bp<-barplot(Stat_signif_GO_cat_contingency[c(1,2),],beside = FALSE,col=c(cols[4],cols[7]),log="x",horiz = TRUE,main="GO Enrichment",las=1,cex.names = 0.01)
       text(x=Stat_signif_GO_cat_contingency[c(1),], y=bp, labels=colnames(Stat_signif_GO_cat_contingency), pos=4, xpd=1,cex=0.4,offset=0.1)
       dev.off()
-    }else(stop("No GO category cleared the corrected P-value cut-off"))
+    }else(warning("No GO category cleared the corrected P-value cut-off"))
   }
   
 }
